@@ -14,7 +14,7 @@ export const useScrollReveal = (triggerKey?: boolean) => {
     if (prefersReducedMotion) {
       document
         .querySelectorAll(
-          ".wow, .imago, .d-rotate, .reveal-on-scroll, .angle-left, .angle-right, .tilt-up, .zoom-in, .fall-down"
+          ".wow, .imago, .d-rotate, .reveal-on-scroll, .angle-left, .angle-right, .tilt-up, .zoom-in, .fall-down, .project-reveal-right, .project-reveal-left, .project-reveal-bottom, .project-reveal-top"
         )
         .forEach((el) => el.classList.add("animated"));
       return;
@@ -43,7 +43,7 @@ export const useScrollReveal = (triggerKey?: boolean) => {
 
     const observeElements = () => {
       const elements = document.querySelectorAll<HTMLElement>(
-        ".wow, .imago, .d-rotate, .reveal-on-scroll, .angle-left, .angle-right, .tilt-up, .zoom-in, .fall-down, .card-banner-frame"
+        ".wow, .imago, .d-rotate, .reveal-on-scroll, .angle-left, .angle-right, .tilt-up, .zoom-in, .fall-down, .card-banner-frame, .section-land, .project-reveal-right, .project-reveal-left, .project-reveal-bottom, .project-reveal-top"
       );
       elements.forEach((el) => {
         observer.observe(el);

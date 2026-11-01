@@ -13,7 +13,7 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ];
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{ pageReady: boolean }> = ({ pageReady }) => {
   const { isDark, toggleTheme } = useTheme();
   const [activeSection, setActiveSection] = useState("home");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className={`navbar${scrolled ? " scrolled nav-scroll" : ""}`} id="mainNavbar">
+    <nav className={`navbar nav-launch${pageReady ? " nav-launch-ready" : ""}${scrolled ? " scrolled nav-scroll" : ""}`} id="mainNavbar">
       <div className="container nav-container">
         <a className="navbar-brand" href="#home" onClick={(e) => { e.preventDefault(); handleNavClick("#home"); }}>
           <span className="logo-circle">S</span>

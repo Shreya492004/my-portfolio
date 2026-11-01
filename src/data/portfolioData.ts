@@ -9,12 +9,12 @@ export const TYPING_PHRASES = [
 
 export const STATS: Stat[] = [
   { value: "5+", label: "Projects Built" },
-  { value: "3", label: "Internships" },
+  { value: "3+", label: "Internships" },
   { value: "8.0", label: "B.E. CGPA" },
 ];
 
 export const SOCIAL_LINKS: SocialLink[] = [
-  { icon: "fab fa-github", href: "https://github.com/Shreya492004", label: "GitHub" },
+  { icon: "fab fa-github", href: "https://github.com/shreya492004", label: "GitHub" },
   { icon: "fab fa-linkedin-in", href: "https://www.linkedin.com/in/shreya004", label: "LinkedIn" },
   { icon: "fas fa-envelope", href: "mailto:sshreyas471@gmail.com", label: "Email" },
   { icon: "fas fa-phone", href: "tel:+918248530828", label: "Phone" },
@@ -218,7 +218,7 @@ export const PROJECTS: Project[] = [
     ],
     tech: ["Java", "Spring Boot", "MySQL", "Bootstrap"],
     github: "https://github.com/Shreya492004",
-    demo: { type: "video", src: "vid1.mp4", demoTitle: "Hospital Management & Doctor Appointment Booking Preview" },
+    demo: { type: "video", src: "/medivid.mp4", demoTitle: "Hospital Management & Doctor Appointment Booking Preview" },
   },
   {
     title: "Real-Time Traffic Prediction & Congestion Control",
@@ -242,6 +242,6 @@ export const CONTACT_INFO: ContactInfo[] = [
   { icon: "fas fa-phone", label: "Phone", value: "+91 8248530828", href: "tel:+918248530828" },
   { icon: "fas fa-envelope", label: "Email", value: "sshreyas471@gmail.com", href: "mailto:sshreyas471@gmail.com" },
   { icon: "fas fa-location-dot", label: "Location", value: "Nagercoil, Tamil Nadu, India" },
-  { icon: "fab fa-linkedin-in", label: "LinkedIn", value: "linkedin.com/in/shreya004", href: "https://www.linkedin.com/in/shreya004" },
-  { icon: "fab fa-github", label: "GitHub", value: "github.com/Shreya492004", href: "https://github.com/Shreya492004" },
+  { icon: "fab fa-linkedin-in", label: "LinkedIn", value: "www.linkedin.com/in/shreya004", href: "https://www.linkedin.com/in/shreya004" },
+  { icon: "fab fa-github", label: "GitHub", value: "github.com/shreya492004", href: "https://github.com/shreya492004" },
 ];

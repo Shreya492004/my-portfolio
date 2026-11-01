@@ -1,142 +1,126 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 export const About: React.FC = () => {
-  const [copied, setCopied] = useState(false);
+  const [inView, setInView] = useState(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
 
-  const handleCopyEmail = () => {
-    navigator.clipboard.writeText("sshreyas471@gmail.com");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2200);
+  const trackHologram = (event: React.PointerEvent<HTMLElement>) => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const bounds = section.getBoundingClientRect();
+    section.style.setProperty("--holo-x", `${event.clientX - bounds.left}px`);
+    section.style.setProperty("--holo-y", `${event.clientY - bounds.top}px`);
   };
 
-  return (
-    <section className="section about about__section" id="about" aria-labelledby="about-title">
-      <div className="container">
-        {/* Numbered Section Label */}
-        <p className="label section-label wow fadeIn">
-          <span className="section-label__index">01</span>
-          <span>About</span>
-        </p>
+  const resetHologram = () => {
+    sectionRef.current?.style.setProperty("--holo-x", "50%");
+    sectionRef.current?.style.setProperty("--holo-y", "40%");
+  };
 
-        {/* Pravin Sam Inspired Dual-Column Layout */}
-        <div className="about__layout">
-          {/* Left Column: Bold Statement */}
-          <h2 className="about__statement wow fadeInUp" id="about-title" data-delay="0.1s">
-            I turn complex ideas into digital experiences that feel{" "}
-            <span className="about__emphasis">simple,</span>{" "}
-            <span className="about__emphasis">intuitive,</span> and{" "}
-            <span className="about__emphasis">effortless.</span>
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+        } else {
+          // Re-triggerable when scrolling out
+          const rect = entry.boundingClientRect;
+          if (rect.top > window.innerHeight || rect.bottom < 0) {
+            setInView(false);
+          }
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className={`about-page-section ${inView ? "page-zoom-enter" : "page-zoom-initial"}`}
+      id="about"
+      aria-labelledby="about-title"
+      onPointerMove={trackHologram}
+      onPointerLeave={resetHologram}
+    >
+      <div className="container about-page-container">
+        {/* Page Tag Indicator */}
+        <div className="about-page-tag">
+          <span className="about-page-number">01</span>
+          <span className="about-page-divider">/</span>
+          <span className="about-page-category">PROFILE &amp; PHILOSOPHY</span>
+        </div>
+
+        {/* Full-Stack Software Developer Content */}
+        <div className="about-page-content">
+          <div className="about-role-pill">
+            <span className="pulse-dot"></span> Full Stack Software Developer
+          </div>
+
+          <h2 className="about-page-headline" id="about-title">
+            Architecting <span className="highlight-gradient">modular backend systems</span>, resilient APIs, and responsive digital interfaces.
           </h2>
 
-          {/* Right Column: Aside with Narrative Bio & Stats */}
-          <div className="about__aside wow fadeInUp" data-delay="0.2s">
-            <p className="about__bio">
-              I&apos;m a Full Stack Developer based in Nagercoil &amp; Chennai with a strong foundation in full-stack architecture, clean coding, and scalable web platforms. I specialize in turning complex requirements into responsive, modular interfaces with <strong>React</strong> and <strong>TypeScript</strong>, supported by resilient backends in <strong>NestJS</strong>, <strong>Java Spring Boot</strong>, and <strong>PostgreSQL / MySQL</strong>.
+          <div className="about-page-body">
+            <p>
+              I am a passionate Full Stack Developer with practical engineering experience building production-grade web systems across the <strong>Java</strong>, <strong>NestJS</strong>, and <strong>React</strong> ecosystems. I specialize in designing structured REST APIs, optimizing relational data pipelines in <strong>PostgreSQL</strong> and <strong>MySQL</strong>, and crafting fluid, accessible client interfaces in <strong>TypeScript</strong>.
             </p>
-            <p className="about__bio">
-              Currently engineering at <strong>Imperial Info System</strong>, I collaborate across live client platforms, API communication pipelines, database normalization, and automated workflows.
+            <p>
+              I am currently working at <strong>Imperial Info System</strong>, contributing to customer-facing platforms, database design, backend APIs, and reliable full-stack workflows.
             </p>
+          </div>
 
-            {/* Quick Dossier Chips */}
-            <div className="about__dossier-chips">
-              <span className="about__chip">
-                <i className="fa-solid fa-laptop-code"></i> Full Stack Developer
-              </span>
-              <span className="about__chip">
-                <i className="fa-regular fa-building"></i> Imperial Info System
-              </span>
-              <span className="about__chip">
-                <i className="fa-solid fa-graduation-cap"></i> B.E. CSE (8.0 CGPA)
-              </span>
-              <span className="about__chip">
-                <i className="fa-solid fa-location-dot"></i> Nagercoil &amp; Chennai
-              </span>
-            </div>
+          {/* Technical Focus Chips */}
+          <div className="about-focus-tags">
+            <span className="focus-tag">
+              <i className="fa-solid fa-code"></i> Full Stack Engineering
+            </span>
+            <span className="focus-tag">
+              <i className="fa-regular fa-building"></i> Imperial Info System
+            </span>
+            <span className="focus-tag">
+              <i className="fa-solid fa-server"></i> Java &amp; Spring Boot
+            </span>
+            <span className="focus-tag">
+              <i className="fa-solid fa-feather"></i> NestJS &amp; Node.js
+            </span>
+            <span className="focus-tag">
+              <i className="fab fa-react"></i> React &amp; TypeScript
+            </span>
+            <span className="focus-tag">
+              <i className="fa-solid fa-database"></i> PostgreSQL &amp; MySQL
+            </span>
+          </div>
 
-            {/* Stats Definition List */}
-            <dl className="stats">
-              <div className="stats__item">
-                <dt className="label">Web Applications</dt>
-                <dd className="stats__value">5+</dd>
-              </div>
-              <div className="stats__item">
-                <dt className="label">Years of experience</dt>
-                <dd className="stats__value">1+</dd>
-              </div>
-              <div className="stats__item">
-                <dt className="label">Academic Merit</dt>
-                <dd className="stats__value">8.0</dd>
-              </div>
-            </dl>
+          {/* Action CTAs */}
+          <div className="about-page-actions">
+            <a
+              className="btn btn-primary-custom hover-this"
+              href="/Shreya S.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="fa-solid fa-file-pdf me-2"></i>
+              View Full Resume
+            </a>
 
-            {/* Action Links */}
-            <div className="about__actions">
-              <a
-                className="link-arrow"
-                href="/Shreya S.pdf"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                View full resume
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-arrow-up-right"
-                  aria-hidden="true"
-                >
-                  <path d="M7 7h10v10"></path>
-                  <path d="M7 17 17 7"></path>
-                </svg>
-              </a>
-
-              <button
-                type="button"
-                className={`about__copy-pill ${copied ? "is-copied" : ""}`}
-                onClick={handleCopyEmail}
-                aria-label="Copy email address"
-              >
-                <i
-                  className={
-                    copied ? "fa-solid fa-check text-success" : "fa-regular fa-envelope"
-                  }
-                ></i>
-                {copied ? "Email Copied!" : "sshreyas471@gmail.com"}
-              </button>
-
-              <a
-                className="link-arrow link-arrow--secondary"
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
-                }}
-              >
-                Get in touch
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-arrow-up-right"
-                  aria-hidden="true"
-                >
-                  <path d="M7 7h10v10"></path>
-                  <path d="M7 17 17 7"></path>
-                </svg>
-              </a>
-            </div>
+            <a
+              className="btn btn-dark-custom hover-this"
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault();
+                document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            >
+              <i className="fa-regular fa-paper-plane me-2"></i>
+              Let&apos;s Connect
+            </a>
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@ export const FloatingButtons: React.FC = () => {
     const updateProgress = () => {
       const scroll = window.scrollY;
       const height = document.documentElement.scrollHeight - window.innerHeight;
-      setShowTop(scroll > 150);
+      setShowTop(scroll > 160);
 
       if (height > 0) {
         const progress = pathLength - (scroll * pathLength) / height;
@@ -46,13 +46,14 @@ export const FloatingButtons: React.FC = () => {
         <i className="fab fa-whatsapp"></i>
       </a>
 
+      {/* Creative & Modern Unique Scroll Indicator Button */}
       <div
         id="backToTop"
-        className={`progress-wrap cursor-pointer ${showTop ? "active-progress show" : ""}`}
+        className={`modern-scroll-widget ${showTop ? "is-visible" : ""}`}
         onClick={scrollToTop}
         role="button"
         tabIndex={0}
-        aria-label="Back to top"
+        aria-label="Scroll to top"
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
@@ -60,15 +61,26 @@ export const FloatingButtons: React.FC = () => {
           }
         }}
       >
-        <svg className="progress-circle" viewBox="-1 -1 102 102" aria-hidden="true">
+        <svg className="scroll-progress-ring" viewBox="-1 -1 102 102" aria-hidden="true">
           <path
             ref={pathRef}
             d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"
           />
         </svg>
-        <span className="progress-arrow-icon" aria-hidden="true">
-          <i className="fa-solid fa-arrow-up"></i>
-        </span>
+        <div className="scroll-indicator-inner" aria-hidden="true">
+          <svg
+            className="scroll-indicator-glyph"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <polyline points="18 15 12 9 6 15" />
+          </svg>
+          <span className="scroll-indicator-dot"></span>
+        </div>
       </div>
     </>
   );

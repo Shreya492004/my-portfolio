@@ -1,4 +1,4 @@
-﻿import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface ThemeContextType {
   isDark: boolean;
@@ -8,11 +8,14 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType>({ isDark: false, toggleTheme: () => {} });
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isDark, setIsDark] = useState(() => localStorage.getItem("theme") === "dark");
+  const [isDark, setIsDark] = useState(() => {
+    return localStorage.getItem("portfolio-theme-v2") === "dark";
+  });
 
   useEffect(() => {
     document.body.classList.toggle("dark-mode", isDark);
-    localStorage.setItem("theme", isDark ? "dark" : "light");
+    document.documentElement.dataset.theme = isDark ? "dark" : "light";
+    localStorage.setItem("portfolio-theme-v2", isDark ? "dark" : "light");
   }, [isDark]);
 
   const toggleTheme = () => setIsDark((prev) => !prev);

@@ -1,99 +1,82 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
-/**
- * Geekfolio Custom Cursor:
- * Features a central dot and trailing circle with mix-blend-mode difference.
- * Expands to cursor-active state when hovering over links, buttons, and interactive cards.
- * Automatically disabled on touch / mobile devices.
- */
+interface CursorPosition {
+  x: number;
+  y: number;
+}
+
 export const CustomCursor: React.FC = () => {
-  const [enabled] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return (
-      window.matchMedia("(pointer: fine)").matches &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    );
-  });
-
-  const [active, setActive] = useState(false);
-  const [visible, setVisible] = useState(false);
-
-  const dotRef = useRef<HTMLDivElement>(null);
-  const circleRef = useRef<HTMLDivElement>(null);
-
-  const mousePos = useRef({ x: -100, y: -100 });
-  const circlePos = useRef({ x: -100, y: -100 });
-  const rafId = useRef<number | null>(null);
+  const dotRef = useRef<HTMLSpanElement>(null);
+  const ringRef = useRef<HTMLSpanElement>(null);
+  const glowRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
-    if (!enabled) return;
+    const pointerFine = window.matchMedia("(pointer: fine)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (!pointerFine.matches || reducedMotion.matches) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      mousePos.current = { x: e.clientX, y: e.clientY };
-      if (!visible) setVisible(true);
+    const dot = dotRef.current;
+    const ring = ringRef.current;
+    const glow = glowRef.current;
+    if (!dot || !ring || !glow) return;
 
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+    const target: CursorPosition = { x: -100, y: -100 };
+    const follower: CursorPosition = { x: -100, y: -100 };
+    let frame = 0;
+    let visible = false;
+
+    const render = () => {
+      frame = 0;
+      follower.x += (target.x - follower.x) * 0.18;
+      follower.y += (target.y - follower.y) * 0.18;
+
+      dot.style.transform = `translate3d(${target.x}px, ${target.y}px, 0)`;
+      ring.style.transform = `translate3d(${follower.x}px, ${follower.y}px, 0)`;
+      glow.style.transform = `translate3d(${follower.x}px, ${follower.y}px, 0)`;
+
+      if (visible && Math.hypot(target.x - follower.x, target.y - follower.y) > 0.25) {
+        frame = requestAnimationFrame(render);
       }
     };
 
-    const handleMouseLeave = () => setVisible(false);
-    const handleMouseEnter = () => setVisible(true);
-
-    // Spring/lerp trailing for circle
-    const loop = () => {
-      circlePos.current.x += (mousePos.current.x - circlePos.current.x) * 0.18;
-      circlePos.current.y += (mousePos.current.y - circlePos.current.y) * 0.18;
-
-      if (circleRef.current) {
-        circleRef.current.style.transform = `translate3d(${circlePos.current.x}px, ${circlePos.current.y}px, 0)`;
-      }
-
-      rafId.current = requestAnimationFrame(loop);
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType !== "mouse") return;
+      target.x = event.clientX;
+      target.y = event.clientY;
+      visible = true;
+      dot.classList.add("is-visible");
+      ring.classList.add("is-visible");
+      glow.classList.add("is-visible");
+      if (!frame) frame = requestAnimationFrame(render);
     };
 
-    rafId.current = requestAnimationFrame(loop);
-
-    // Hover detection on interactive elements
-    const handleElementHover = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-
-      const interactive = target.closest(
-        "a, button, .btn, .theme-toggle-btn, .counter-box, .skill-card, .project-card, .timeline-card, .cursor-pointer, input, textarea"
-      );
-      setActive(!!interactive);
+    const onPointerLeave = () => {
+      visible = false;
+      dot.classList.remove("is-visible");
+      ring.classList.remove("is-visible");
+      glow.classList.remove("is-visible");
     };
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("mouseover", handleElementHover, { passive: true });
-    document.addEventListener("mouseleave", handleMouseLeave);
-    document.addEventListener("mouseenter", handleMouseEnter);
+    document.body.classList.add("custom-cursor-active");
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("blur", onPointerLeave);
+    document.addEventListener("mouseleave", onPointerLeave);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseover", handleElementHover);
-      document.removeEventListener("mouseleave", handleMouseLeave);
-      document.removeEventListener("mouseenter", handleMouseEnter);
-      if (rafId.current) cancelAnimationFrame(rafId.current);
+      document.body.classList.remove("custom-cursor-active");
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("blur", onPointerLeave);
+      document.removeEventListener("mouseleave", onPointerLeave);
+      if (frame) cancelAnimationFrame(frame);
     };
-  }, [enabled, visible]);
-
-  if (!enabled) return null;
+  }, []);
 
   return (
-    <>
-      <div
-        ref={dotRef}
-        className={`custom-cursor-dot ${visible ? "is-visible" : ""}`}
-        aria-hidden="true"
-      />
-      <div
-        ref={circleRef}
-        className={`custom-cursor-circle ${visible ? "is-visible" : ""} ${active ? "cursor-active" : ""}`}
-        aria-hidden="true"
-      />
-    </>
+    <div className="holo-cursor-layer" aria-hidden="true">
+      <span ref={glowRef} className="holo-cursor-glow" />
+      <span ref={ringRef} className="holo-cursor-ring" />
+      <span ref={dotRef} className="holo-cursor-dot" />
+    </div>
   );
 };
 

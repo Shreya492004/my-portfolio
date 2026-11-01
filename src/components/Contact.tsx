@@ -17,55 +17,53 @@ const Contact: React.FC = () => {
     const subject = (form.querySelector('input[name="subject"]') as HTMLInputElement)?.value;
     const message = (form.querySelector('textarea[name="message"]') as HTMLTextAreaElement)?.value;
 
-    const replyTo = form.querySelector<HTMLInputElement>("#replyToField");
-    if (replyTo) replyTo.value = email;
-
-    // 1. Try NestJS Backend SMTP endpoint first
     try {
-      const backendUrl = "http://localhost:5000/api/contact";
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const timeoutId = window.setTimeout(() => controller.abort(), 15000);
 
-      const res = await fetch(backendUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ name, email, subject: subject || "Portfolio Inquiry", message }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (res.ok) {
-        setStatus("success");
-        setFeedbackMsg("Thank you! Your message has been sent successfully via NestJS SMTP Mailer.");
-        form.reset();
-        return;
+      let result: { success?: boolean | string; message?: string };
+      let responseOk = false;
+      try {
+        const res = await fetch("https://formsubmit.co/ajax/sshreyas471@gmail.com", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            subject: subject || "Portfolio Inquiry",
+            message,
+            _subject: "New Portfolio Message from Shreya's Site",
+            _template: "table",
+            _captcha: "false",
+            _replyto: email,
+          }),
+          signal: controller.signal,
+        });
+        responseOk = res.ok;
+        result = await res.json() as { success?: boolean | string; message?: string };
+      } finally {
+        window.clearTimeout(timeoutId);
       }
-    } catch {
-      // Backend not running locally or timed out; seamlessly fallback to FormSubmit
-    }
 
-    // 2. Seamless Fallback: FormSubmit
-    try {
-      const res = await fetch("https://formsubmit.co/175a558fe3ae5af5a8a8726d20c38a99", {
-        method: "POST",
-        body: new FormData(form),
-        headers: { Accept: "application/json" },
-      });
-      if (res.ok) {
-        setStatus("success");
-        setFeedbackMsg("Thank you! Your message has been sent successfully.");
-        form.reset();
-      } else {
-        setStatus("error");
+      if (!responseOk || result.success === false || result.success === "false") {
+        throw new Error(result.message || "The email service could not accept your message.");
       }
-    } catch {
+
+      setStatus("success");
+      setFeedbackMsg("Thanks! Your message was sent to Shreya's inbox.");
+      form.reset();
+    } catch (error) {
       setStatus("error");
+      setFeedbackMsg(
+        error instanceof Error && error.name === "AbortError"
+          ? "Sending timed out. Please try again or email sshreyas471@gmail.com directly."
+          : "Your message could not be sent. Please try again or email sshreyas471@gmail.com directly."
+      );
     }
   };
 
   return (
-    <section id="contact" className="py-section">
+    <section id="contact" className="py-section wow section-land">
       <div className="container">
         <div className="section-title wow fadeIn">
           <h6 className="section-subtitle">Get In Touch</h6>
@@ -174,7 +172,7 @@ const Contact: React.FC = () => {
               >
                 {status === "sending" ? (
                   <>
-                    <i className="fa-solid fa-spinner fa-spin me-2"></i>Sending via SMTP...
+                    <i className="fa-solid fa-spinner fa-spin me-2"></i>Sending...
                   </>
                 ) : (
                   <>
@@ -192,7 +190,7 @@ const Contact: React.FC = () => {
               {status === "error" && (
                 <p className="error-msg">
                   <i className="fa-solid fa-triangle-exclamation me-1"></i>
-                  Something went wrong. Please email directly to sshreyas471@gmail.com
+                  {feedbackMsg || "Something went wrong. Please email directly to sshreyas471@gmail.com"}
                 </p>
               )}
             </form>

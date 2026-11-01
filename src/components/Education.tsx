@@ -2,7 +2,7 @@ import React from "react";
 import { EDUCATION } from "../data/portfolioData";
 
 const Education: React.FC = () => (
-  <section id="education" className="py-section">
+  <section id="education" className="py-section wow section-land">
     <div className="container">
       <div className="section-title wow fadeIn">
         <h6 className="section-subtitle">Academics</h6>
