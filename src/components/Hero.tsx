@@ -154,7 +154,7 @@ const Hero: React.FC = () => {
             <div className="hero-image-wrapper hover-this">
               <div className="hero-img-frame">
                 <img
-                  src="/shry.jpeg"
+                  src="/shry-cutout.png"
                   className="hero-img"
                   alt="Shreya - Full Stack Developer"
                 />

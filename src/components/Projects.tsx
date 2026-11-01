@@ -17,7 +17,7 @@ const VideoModal: React.FC<VideoModalProps> = ({ title, src, onClose }) => (
         </button>
       </div>
       <div className="modal-body-box">
-        <video width="100%" controls autoPlay>
+        <video width="100%" controls autoPlay muted playsInline preload="auto">
           <source src={src} type="video/mp4" />
           Your browser does not support HTML5 video playback.
         </video>

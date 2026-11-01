@@ -49,6 +49,19 @@ const Footer: React.FC = () => {
               <li><a href="#contact">Contact</a></li>
             </ul>
           </nav>
+
+          <div className="footer-col footer-cta">
+            <h5 className="footer-col-title">Have a project in mind?</h5>
+            <p className="footer-cta-copy">
+              Let’s build something meaningful together. Tell me what you’re working on.
+            </p>
+            <a className="footer-cta-link" href="#contact">
+              Get in touch <i className="fas fa-arrow-right" aria-hidden="true"></i>
+            </a>
+            <a className="footer-cta-email" href="mailto:sshreyas471@gmail.com">
+              sshreyas471@gmail.com
+            </a>
+          </div>
         </div>
 
         <hr className="footer-divider" />

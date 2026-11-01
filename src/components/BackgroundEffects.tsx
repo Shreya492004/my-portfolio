@@ -3,14 +3,11 @@ import React, { useEffect, useRef } from "react";
 interface UpwardDot {
   x: number;
   y: number;
+  z: number;
   radius: number;
-  vy: number;
   vx: number;
-  trailLength: number;
-  phase: number;
-  sparkle: boolean;
+  vy: number;
   alpha: number;
-  baseAlpha: number;
   color: string;
   glowColor: string;
   pulsePhase: number;
@@ -18,10 +15,10 @@ interface UpwardDot {
 }
 
 const DOT_PALETTE = [
-  { core: "rgba(99, 102, 241, ", glow: "rgba(99, 102, 241, 0.24)" },
-  { core: "rgba(6, 182, 212, ", glow: "rgba(6, 182, 212, 0.28)" },
-  { core: "rgba(168, 85, 247, ", glow: "rgba(168, 85, 247, 0.22)" },
-  { core: "rgba(34, 211, 238, ", glow: "rgba(34, 211, 238, 0.24)" },
+  { core: "rgba(99, 102, 241, ", glow: "rgba(99, 102, 241, 0.18)" },
+  { core: "rgba(6, 182, 212, ", glow: "rgba(6, 182, 212, 0.2)" },
+  { core: "rgba(168, 85, 247, ", glow: "rgba(168, 85, 247, 0.14)" },
+  { core: "rgba(20, 184, 166, ", glow: "rgba(20, 184, 166, 0.16)" },
 ];
 
 export const BackgroundEffects: React.FC = () => {
@@ -47,27 +44,24 @@ export const BackgroundEffects: React.FC = () => {
     window.addEventListener("resize", handleResize);
 
     // Subtle, small glowing dots moving gently from bottom to top
-    const count = Math.min(Math.floor((width * height) / 48000), 30);
+    const count = Math.min(Math.floor((width * height) / 42000), 30);
     const dots: UpwardDot[] = [];
 
     for (let i = 0; i < count; i++) {
       const palette = DOT_PALETTE[Math.floor(Math.random() * DOT_PALETTE.length)];
-      const baseAlpha = 0.18 + Math.random() * 0.2;
+      const z = 0.3 + Math.random() * 0.7;
       dots.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: 0.9 + Math.random() * 1.1,
-        vy: -0.28 - Math.random() * 0.5,
-        vx: (Math.random() - 0.5) * 0.18,
-        trailLength: 8 + Math.random() * 17,
-        phase: Math.random() * Math.PI * 2,
-        sparkle: Math.random() > 0.72,
-        alpha: baseAlpha,
-        baseAlpha,
+        z,
+        radius: (1.2 + Math.random() * 2.6) * z,
+        vx: (Math.random() - 0.5) * 0.2 * z,
+        vy: (-0.08 - Math.random() * 0.18) * z,
+        alpha: 0.1 + Math.random() * 0.12,
         color: palette.core,
         glowColor: palette.glow,
         pulsePhase: Math.random() * Math.PI * 2,
-        pulseSpeed: 0.01 + Math.random() * 0.02,
+        pulseSpeed: 0.015 + Math.random() * 0.025,
       });
     }
 
@@ -87,46 +81,41 @@ export const BackgroundEffects: React.FC = () => {
       ctx.clearRect(0, 0, width, height);
 
       dots.forEach((dot) => {
+        dot.x += dot.vx;
         dot.y += dot.vy;
-        dot.phase += dot.pulseSpeed;
         dot.pulsePhase += dot.pulseSpeed;
-        dot.x += dot.vx + Math.sin(dot.phase) * 0.14;
 
-        // Wrap holographic streaks from top to bottom.
-        if (dot.y < -10) {
-          dot.y = height + 10;
-          dot.x = Math.random() * width;
-        }
+        if (dot.x < -20) dot.x = width + 20;
+        if (dot.x > width + 20) dot.x = -20;
+        if (dot.y < -20) dot.y = height + 20;
+        if (dot.y > height + 20) dot.y = -20;
 
-        const pulse = Math.sin(dot.pulsePhase) * 0.08;
-        const currentAlpha = Math.max(0.08, Math.min(0.45, dot.baseAlpha + pulse));
-        const tailX = dot.x - dot.vx * dot.trailLength * 2;
-        const tailY = dot.y - dot.vy * dot.trailLength;
-
-        ctx.save();
-        ctx.globalAlpha = currentAlpha;
-        ctx.beginPath();
-        ctx.moveTo(tailX, tailY);
-        ctx.lineTo(dot.x, dot.y);
-        ctx.strokeStyle = dot.glowColor;
-        ctx.lineWidth = dot.radius * 1.4;
-        ctx.lineCap = "round";
-        ctx.shadowColor = dot.glowColor;
-        ctx.shadowBlur = 7;
-        ctx.stroke();
+        const pulse = Math.sin(dot.pulsePhase) * 0.035;
+        const currentAlpha = Math.max(0.04, Math.min(0.24, dot.alpha + pulse));
+        const glowRadius = dot.radius * (3 + dot.z * 1.5);
+        const glow = ctx.createRadialGradient(dot.x, dot.y, 0, dot.x, dot.y, glowRadius);
+        glow.addColorStop(0, `${dot.color}${currentAlpha * 0.5})`);
+        glow.addColorStop(0.4, dot.glowColor);
+        glow.addColorStop(1, "rgba(0, 0, 0, 0)");
 
         ctx.beginPath();
-        ctx.arc(dot.x, dot.y, dot.radius * 0.75, 0, Math.PI * 2);
-        ctx.fillStyle = `${dot.color}${Math.min(0.85, currentAlpha + 0.25)})`;
+        ctx.arc(dot.x, dot.y, glowRadius, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
         ctx.fill();
 
-        if (dot.sparkle) {
-          ctx.translate(dot.x, dot.y);
-          ctx.rotate(Math.PI / 4);
-          ctx.fillStyle = `rgba(255, 255, 255, ${currentAlpha * 0.75})`;
-          ctx.fillRect(-dot.radius * 0.55, -dot.radius * 0.55, dot.radius * 1.1, dot.radius * 1.1);
-        }
-        ctx.restore();
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `${dot.color}${currentAlpha})`;
+        ctx.shadowColor = dot.glowColor;
+        ctx.shadowBlur = 3 * dot.z;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, dot.radius * 1.8, 0, Math.PI * 2);
+        ctx.strokeStyle = `${dot.color}${currentAlpha * 0.55})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
       });
 
       animId = requestAnimationFrame(render);
