@@ -80,15 +80,17 @@ const Hero: React.FC = () => {
             <div className="hero-name-lockup">
               <p className="hero-role">FULL STACK DEVELOPER</p>
               <h1 className="hero-title hero-name" aria-label="Shreya S.">
-                {Array.from("Shreya S.").map((letter, index) => (
-                  <span
-                    key={`${letter}-${index}`}
-                    aria-hidden="true"
-                    style={{ animationDelay: `${index * 0.12}s` }}
-                  >
-                    {letter === " " ? "\u00a0" : letter}
-                  </span>
-                ))}
+                <span className="hero-name-line hero-name-line--solid" aria-hidden="true">
+                  {Array.from("Shreya\u00a0S.").map((letter, index) => (
+                    <span
+                      key={`${letter}-${index}`}
+                      className="hero-name-letter"
+                      style={{ animationDelay: `${index * 0.12}s` }}
+                    >
+                      {letter}
+                    </span>
+                  ))}
+                </span>
               </h1>
             </div>
 
@@ -154,7 +156,7 @@ const Hero: React.FC = () => {
             <div className="hero-image-wrapper hover-this">
               <div className="hero-img-frame">
                 <img
-                  src="/shry-cutout.png"
+                  src="/shry-cutout-clean.png"
                   className="hero-img"
                   alt="Shreya - Full Stack Developer"
                 />

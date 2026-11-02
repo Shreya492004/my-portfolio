@@ -29,13 +29,6 @@ const Education: React.FC = () => (
                   <h4 className="fw-bold mb-1">{edu.degree}</h4>
                   <h6 className="text-primary">{edu.field}</h6>
                 </div>
-                <div className="scores-col">
-                  {edu.scores.map((s) => (
-                    <span key={s.label} className="score-pill">
-                      {s.label}: {s.value}
-                    </span>
-                  ))}
-                </div>
               </div>
               <hr />
               {edu.details.map((d, i) => (

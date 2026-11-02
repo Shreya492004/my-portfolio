@@ -28,9 +28,9 @@ const MainContent: React.FC = () => {
       <Preloader onFinish={finishPreloader} />
       <CustomCursor />
       <Navbar pageReady={pageReady} />
+      <BackgroundEffects />
       <div className={`website-portal ${pageReady ? "page-reveal-active" : "page-reveal-initial"}`}>
         <main id="main" className="main-flow-wrapper">
-          <BackgroundEffects />
           <Hero />
           <Marquee />
           <About />

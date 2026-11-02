@@ -10,7 +10,6 @@ export const TYPING_PHRASES = [
 export const STATS: Stat[] = [
   { value: "5+", label: "Projects Built" },
   { value: "3+", label: "Internships" },
-  { value: "8.0", label: "B.E. CGPA" },
 ];
 
 export const SOCIAL_LINKS: SocialLink[] = [
@@ -35,7 +34,6 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       { icon: "fab fa-html5", iconColor: "#dc3545", name: "HTML5" },
       { icon: "fab fa-css3-alt", iconColor: "#0d6efd", name: "CSS3" },
       { icon: "fab fa-bootstrap", iconColor: "#7952b3", name: "Bootstrap" },
-      { icon: "fab fa-php", iconColor: "#0d6efd", name: "PHP" },
       { icon: "fa-solid fa-network-wired", iconColor: "#6c757d", name: "REST APIs" },
     ],
   },
@@ -48,8 +46,6 @@ export const SKILL_CATEGORIES: SkillCategory[] = [
       { icon: "fab fa-github", iconColor: "currentColor", name: "GitHub" },
       { icon: "fa-solid fa-paper-plane", iconColor: "#dc3545", name: "Postman" },
       { icon: "fa-solid fa-cubes", iconColor: "#ffc107", name: "Maven" },
-      { icon: "fa-solid fa-laptop-code", iconColor: "#0d6efd", name: "IntelliJ IDEA" },
-      { icon: "fa-solid fa-laptop-file", iconColor: "#7952b3", name: "Visual Studio", subtitle: "IDE & Dev Environment" },
     ],
   },
   {
@@ -119,7 +115,6 @@ export const EDUCATION: EducationItem[] = [
     badgeColor: "#0d6efd",
     degree: "Bachelor of Engineering",
     field: "Computer Science and Engineering",
-    scores: [{ label: "CGPA", value: "8.0" }],
     details: [
       { icon: "fas fa-university", text: "Ponjesly College of Engineering, Nagercoil" },
       { icon: "fas fa-award", text: "Affiliated to Anna University" },
@@ -131,10 +126,6 @@ export const EDUCATION: EducationItem[] = [
     badgeColor: "#198754",
     degree: "HSC & SSLC",
     field: "Higher Secondary & Secondary Education",
-    scores: [
-      { label: "HSC", value: "75%" },
-      { label: "SSLC", value: "71.8%" },
-    ],
     details: [
       { icon: "fas fa-school", text: "Christuraja Matriculation Higher Secondary School" },
       { icon: "fas fa-location-dot", text: "Marthandam, Tamil Nadu" },
