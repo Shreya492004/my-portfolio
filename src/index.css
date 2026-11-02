@@ -2594,6 +2594,15 @@ body:not(.dark-mode) .footer-bottom {
 }
 
 @media (max-width: 768px) {
+  .project.wow.project-reveal-right:first-child,
+  .project.wow.project-reveal-right:first-child.animated {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+    will-change: auto;
+  }
+
   .about-page-section { min-height: auto; padding: 80px 0 60px; }
   .about-page-headline { font-size: 1.85rem; }
   .about-page-actions { flex-direction: column; align-items: stretch; }

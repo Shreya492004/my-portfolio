@@ -124,7 +124,7 @@ export const Projects: React.FC = () => {
 
                   {/* Interactive Links */}
                   <div className="project__links">
-                    {isVideo ? (
+                    {project.showDemoButton !== false && (isVideo ? (
                       <button
                         type="button"
                         className="link-arrow"
@@ -178,7 +178,7 @@ export const Projects: React.FC = () => {
                           <path d="M7 17 17 7"></path>
                         </svg>
                       </a>
-                    )}
+                    ))}
 
                     <a
                       className="link-arrow link-arrow--secondary"

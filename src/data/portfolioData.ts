@@ -209,6 +209,7 @@ export const PROJECTS: Project[] = [
     ],
     tech: ["Java", "Spring Boot", "MySQL", "Bootstrap"],
     github: "https://github.com/Shreya492004",
+    showDemoButton: false,
     demo: { type: "video", src: "/medivid.mp4", demoTitle: "Hospital Management & Doctor Appointment Booking Preview" },
   },
   {
